@@ -1,19 +1,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#15171A">
+<meta name="theme-color" content="#121417">
 <title>출퇴근 영어</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@200;300;500&family=Noto+Sans+KR:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* 다크 계기판: 밤에 켜진 자동차 클러스터. 앰버 한 색만 "지금 할 일"에 쓰고 나머지는 조용히 둔다.
    숫자(시간, 진도, D-day)는 계기판 숫자처럼 가는 좁은 글꼴로 크게. */
 :root{color-scheme:dark;
- --bg:#15171A;--panel:#1D2025;--panel2:#24282E;--line:#2E333A;
- --fg:#ECE9E3;--muted:#8D939B;--dim:#5E646C;
+ --bg:#121417;--panel:#1B1E23;--panel2:#252A31;--line:#30363E;
+ --fg:#F2EFE9;--muted:#A6ACB5;--dim:#878E98;
  --amber:#FFB02E;--amber-ink:#1A1204;--amber-soft:rgba(255,176,46,.14);
  --ok:#9FD8B4;--warn:#FF7A5C;
  --num:"Barlow Condensed","Noto Sans KR",sans-serif;
- --body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+ --body:"Pretendard Variable",Pretendard,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{background:var(--bg)}
@@ -22,7 +23,8 @@ body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.6 var(--body)
 .wrap{max-width:560px;margin:0 auto;display:grid;gap:22px}
 h1,h2,h3,p{margin:0}
 button,select,input,textarea{font:inherit;color:inherit}
-button{cursor:pointer}
+button{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+select,input,textarea{font-size:16px}
 :focus-visible{outline:2px solid var(--amber);outline-offset:3px}
 
 /* 머리 */
@@ -123,20 +125,41 @@ select,input[type=date],input[type=text]{background:var(--bg);border:1px solid v
 .filebtn{position:relative;display:inline-flex;align-items:center;color:var(--fg);font-size:15px}
 .filebtn input{position:absolute;width:1px;height:1px;opacity:0}
 
-/* 운전 화면: 남은 시간이 계기판 바늘 역할을 한다 */
-#drive{position:fixed;inset:0;background:#0E0F11;color:var(--fg);z-index:20;display:grid;grid-template-rows:auto 1fr auto;gap:16px;
- padding-top:calc(22px + env(safe-area-inset-top,0px));padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+/* 운전 화면: 지금 나오는 문장이 주인공. 남은 시간은 위에 작게 */
+#drive{position:fixed;inset:0;background:#0B0C0E;color:var(--fg);z-index:20;display:grid;grid-template-rows:auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr);gap:14px;
+ padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+.d-head{display:grid;gap:10px}
+.d-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
 #d-kind{font-size:15px;color:var(--muted)}
-#d-mid{align-self:center;text-align:center;display:grid;gap:14px;justify-items:center}
-#d-time{font:200 clamp(96px,32vw,168px)/.9 var(--num);font-variant-numeric:tabular-nums;letter-spacing:-.01em;color:var(--fg)}
-#d-stage{font:500 clamp(24px,7vw,34px)/1.25 var(--body);color:var(--amber);text-wrap:balance}
-#d-sub{color:var(--dim);font-size:15px}
-.bar{height:3px;background:var(--line);border-radius:2px;overflow:hidden;width:100%}
+#d-time{font:500 34px/1 var(--num);font-variant-numeric:tabular-nums;color:var(--fg)}
+#d-mid{display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px;min-height:0;text-align:center}
+.d-state{display:grid;gap:10px;justify-items:center}
+#d-stage{font-size:17px;font-weight:600;color:var(--muted)}
+#d-turn{font-size:18px;font-weight:700;padding:6px 18px;border-radius:999px;border:2px solid var(--line);color:var(--muted);min-height:42px}
+#d-turn:empty{visibility:hidden}
+#d-turn.mine{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}
+#d-line{display:flex;flex-direction:column;justify-content:safe center;align-items:center;gap:16px;min-height:0;overflow:hidden}
+#d-en,#d-ko{max-width:100%;text-wrap:balance;word-break:keep-all;overflow-wrap:anywhere}
+#d-en{font-size:clamp(34px,11vw,60px);font-weight:700;line-height:1.22;letter-spacing:-.015em}
+#d-en:empty,#d-ko:empty{display:none}
+#d-en mark{background:none;color:var(--amber);text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:7px}
+#d-ko{font-size:clamp(18px,5.4vw,26px);line-height:1.45;color:var(--muted)}
+#d-ko.cue{font-size:clamp(28px,8.5vw,44px);font-weight:700;color:var(--fg)}
+#d-sub{color:var(--dim);font-size:14px;text-align:center}
+.bar{height:4px;background:var(--line);border-radius:2px;overflow:hidden;width:100%}
 #d-bar{height:100%;width:0;background:var(--amber);transition:width 1s linear}
-.ctrl{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:10px;margin-top:16px}
-.ctrl button{border:1px solid var(--line);border-radius:18px;background:var(--panel);color:var(--fg);font-weight:500;min-height:112px;font-size:20px}
-#d-pause{background:var(--amber);border-color:var(--amber);color:var(--amber-ink);font-size:24px;font-weight:700}
-#d-end{background:none;border:0;color:var(--dim);padding:14px;min-height:52px;margin-top:6px;width:100%;font-size:15px}
+.ctrl{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:10px;margin-top:10px}
+.ctrl button{border:1px solid var(--line);border-radius:22px;background:var(--panel);color:var(--fg);font-weight:600;min-height:96px;font-size:19px}
+#d-pause{background:var(--amber);border-color:var(--amber);color:var(--amber-ink);font-size:22px;font-weight:700}
+#d-end{background:none;border:0;color:var(--dim);min-height:48px;width:100%;font-size:15px}
+/* 가로로 거치했을 때 */
+@media (orientation:landscape) and (max-height:520px){
+ #drive{gap:8px;padding-top:calc(8px + env(safe-area-inset-top,0px))}
+ .d-head{gap:6px}#d-time{font-size:26px}#d-sub{display:none}
+ .d-state{display:flex;justify-content:center;align-items:center;gap:14px}
+ #d-line{gap:8px}
+ .d-foot{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
+ .ctrl{margin-top:0}.ctrl button{min-height:64px}#d-end{width:auto;min-height:64px;padding:0 8px}}
 
 #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(80px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:11px 16px;border-radius:12px;font-size:15px;z-index:30;max-width:calc(100vw - 32px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
 @media (prefers-reduced-motion:no-preference){.go button,.btn,.ctrl button{transition:transform .08s}.go button:active,.btn:active,.ctrl button:active{transform:scale(.97)}}
@@ -163,6 +186,32 @@ details.kb summary{font-size:14px}
 details.kb label{margin-top:8px}
 details.kb .row{margin-top:8px}
 .btn.on{border-color:var(--amber);color:var(--amber)}
+
+/* v12 다듬기: 터치 크기 48px, 글자 14px 이상, 모서리와 메뉴 통일 */
+body{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+.top h1{font-size:19px;font-weight:700;color:var(--fg)}
+.sign{border-radius:24px;padding:24px 20px 20px}
+.sign h2{font-weight:700;line-height:1.25;word-break:keep-all}
+.go button{border-radius:18px;min-height:96px;font-size:18px;font-weight:700}
+.go small{font-size:14px;font-weight:500}
+.notice{border-radius:20px;padding:18px;line-height:1.65}
+.btn{border-radius:14px;min-height:48px}
+.chip{min-height:44px;font-size:15px}
+.stats{border-radius:20px}
+.stats span{font-size:14px}
+.sec{font-weight:700}
+h3.sec{font-weight:700}
+.list button{padding:16px 2px;min-height:60px}
+.en{font-size:17px;font-weight:600;line-height:1.45}
+.ko{font-size:15px}
+.play{display:inline-flex;align-items:center;justify-self:start;min-height:44px;font-size:15px;color:var(--fg)}
+summary{min-height:44px;display:list-item;line-height:44px}
+nav{background:rgba(18,20,23,.94);padding-top:6px}
+nav button{display:grid;justify-items:center;gap:4px;padding:4px 2px 8px;min-height:62px;font-size:13px;font-weight:600}
+nav svg{width:56px;height:30px;padding:4px 17px;border-radius:999px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav button[aria-current="true"] svg{background:var(--amber-soft);stroke:var(--amber)}
+nav button[aria-current="true"]::after{content:none}
+#toast{bottom:calc(92px + env(safe-area-inset-bottom,0px));border-radius:14px}
 </style>
 <div class="wrap">
  <header class="top"><h1>출퇴근 영어</h1><span class="dday" id="dday"></span></header>
@@ -172,12 +221,12 @@ details.kb .row{margin-top:8px}
  <section id="v-route" class="wrap" hidden></section>
 </div>
 <nav aria-label="메뉴">
- <button data-v="home" aria-current="true">오늘</button><button data-v="talk">집에서 회화</button><button data-v="words">문장</button><button data-v="route">노선</button>
+ <button data-v="home" aria-current="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9H4z"/></svg>오늘</button><button data-v="talk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H10l-5 4v-4H4z"/></svg>집에서 회화</button><button data-v="words"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"/></svg>문장</button><button data-v="route"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8.5 18H15a3 3 0 000-6H9a3 3 0 010-6h6.5"/></svg>노선</button>
 </nav>
 <div id="drive" hidden>
- <div id="d-kind"></div>
- <div id="d-mid"><div id="d-time" aria-label="남은 시간">30:00</div><div id="d-stage"></div><div id="d-sub">눈은 도로에, 입은 크게</div></div>
- <div><div class="bar"><div id="d-bar"></div></div><div class="ctrl"><button id="d-prev" aria-label="다시 듣기">다시</button><button id="d-pause">일시정지</button><button id="d-next" aria-label="다음 문장">다음</button></div><button id="d-end">수업 끝내기</button></div>
+ <div class="d-head"><div class="d-row"><div id="d-kind"></div><div id="d-time" aria-label="남은 시간">30:00</div></div><div class="bar"><div id="d-bar"></div></div></div>
+ <div id="d-mid"><div class="d-state"><div id="d-stage"></div><div id="d-turn"></div></div><div id="d-line"><div id="d-en" lang="en"></div><div id="d-ko"></div></div></div>
+ <div><div id="d-sub">화면은 신호 대기 때만 보세요</div><div class="d-foot"><div class="ctrl"><button id="d-prev">다시 듣기</button><button id="d-pause">일시정지</button><button id="d-next">다음</button></div><button id="d-end">수업 끝내기</button></div></div>
 </div>
 <div id="toast" role="status" hidden></div>
 <script>/* 수업 콘텐츠: "영어|한국어" 형식. 회화의 A는 상대방, B는 나. */
@@ -354,7 +403,8 @@ async function initCaps(){if(!window.claude)return;
 /* 이름 넣기: 수업 문장의 {name}, {nameKo}를 설정에 적은 이름으로 바꾼다. 공개 파일에는 실제 이름이 들어가지 않는다. */
 const josa=n=>{const c=n.charCodeAt(n.length-1);return c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28?"이에요":"예요"};
 const per=t=>{const e=S.name||"Min",k=S.nameKo||"민";return String(t).replace(/\{nameKo\}이에요/g,k+josa(k)).replace(/\{nameKo\}/g,k).replace(/\{name\}/g,e)};
-const split=x=>{x=per(x);const i=x.indexOf("|");return{en:x.slice(0,i),ko:x.slice(i+1)}};
+const KO={}; /* 영어 문장 → 뜻. 운전 화면에 함께 띄운다 */
+const split=x=>{x=per(x);const i=x.indexOf("|"),en=x.slice(0,i),ko=x.slice(i+1);KO[en]=ko;return{en,ko}};
 const pairQ=x=>{x=per(x);const i=x.indexOf("|");return{q:x.slice(0,i),a:x.slice(i+1)}};
 function packOf(w){return PACKS[w]||S.packs[w]||null}
 function extraOf(w,d){const p=packOf(w),pd=p&&p.days[d];return(EXTRAS[w]&&EXTRAS[w][d])||(pd&&pd.sub?pd:null)||(S.extras[w]&&S.extras[w][d])||null}
@@ -424,6 +474,7 @@ async function carHear(en,ms,tok){await beep();if(tok!==P.tok)return;let r;P.hea
  const b=bestOf(en,r.texts);P.scores.push(b.score);
  if(b.score>=80){await tone([660,990],.11);await speak("Good!","en",1,"A")}else if(b.score>=40)await speak("Almost.","en",1,"A");else await speak("Try again.","en",1,"A")}
 const koS=t=>say(t,"ko",1);
+const cue=t=>({...koS(t),cue:true}); /* 한국말을 듣고 영어로 말하는 문제: 정답이 나오기 전에는 영어를 숨긴다 */
 const fastR=r=>1;
 const REDUCE=[[/\bgoing to\b(?= [a-z])/gi,"gonna"],[/\bwant to\b/gi,"wanna"],[/\bgot to\b/gi,"gotta"],[/\bkind of\b/gi,"kinda"],[/\blet me\b/gi,"lemme"],[/\bgive me\b/gi,"gimme"],[/\bI am\b/g,"I'm"],[/\bdo not\b/gi,"don't"],[/\bit is\b/gi,"it's"]];
 const native=t=>REDUCE.reduce((a,[re,to])=>a.replace(re,m=>m[0]===m[0].toUpperCase()&&to[0]!=="I"?to[0].toUpperCase()+to.slice(1):to),t);
@@ -438,10 +489,10 @@ function uPron(L,r,again){if(!L.p)return[];return[{label:"발음 포인트",step
 function uNew(s,r){const st=[say(s.en,"en",.72),wait(500),koS(s.ko),wait(500)],cs=chunks(s.en);
  if(cs.length){let acc="";cs.forEach((c,k)=>{acc=k?acc+" "+c:c;if(k===cs.length-1)return;st.push(say(c,"en",.75),wait(repNew(c)));if(k)st.push(say(acc,"en",.75),wait(repNew(acc)))})}
  else st.push(say(s.en,"en",.75),wait(repNew(s.en)));
- st.push(say(s.en,"en",.8),wait(repNew(s.en)),say(s.en,"en",r),wait(repMs(s.en)),say(s.en,"en",r),wait(repMs(s.en)));return{label:"새 문장",ids:[s.id],steps:st}}
-function uRecall(s,r,label){return{label,ids:[s.id],steps:[koS(s.ko),hear(s.en,repMs(s.en)+1000),say(s.en,"en",r),wait(repMs(s.en))]}}
+ st.push(say(s.en,"en",.8),wait(repNew(s.en)),say(s.en,"en",r),wait(repMs(s.en)),say(s.en,"en",r),wait(repMs(s.en)));return{label:"새 문장",ids:[s.id],main:s.en,steps:st}}
+function uRecall(s,r,label){return{label,ids:[s.id],steps:[cue(s.ko),hear(s.en,repMs(s.en)+1000),say(s.en,"en",r),wait(repMs(s.en))]}}
 function uShadow(L,r){const u=[intro("그림자 따라 말하기","원어민 속도의 소리를 들으며 거의 동시에 따라 말해보세요. 단어 하나하나보다 리듬을 따라가세요.")];shuffle(L.s).forEach(s=>u.push({label:"그림자 따라 말하기",ids:[s.id],steps:[say(native(s.en),"en",1),wait(repMs(s.en)-200),say(native(s.en),"en",1),wait(repMs(s.en)-200)]}));return u}
-function uSub(L,r,shuf){if(!L.sub.length)return[];const u=[intro("바꿔 말하기","단어를 바꿔 말해봅니다. 한국말 힌트를 듣고 영어 문장을 먼저 만들어 보세요.")];(shuf?shuffle(L.sub):L.sub).forEach(s=>u.push({label:"바꿔 말하기",steps:[koS(s.ko),hear(s.en,repMs(s.en)+1500),say(s.en,"en",r),wait(repMs(s.en))]}));return u}
+function uSub(L,r,shuf){if(!L.sub.length)return[];const u=[intro("바꿔 말하기","단어를 바꿔 말해봅니다. 한국말 힌트를 듣고 영어 문장을 먼저 만들어 보세요.")];(shuf?shuffle(L.sub):L.sub).forEach(s=>u.push({label:"바꿔 말하기",steps:[cue(s.ko),hear(s.en,repMs(s.en)+1500),say(s.en,"en",r),wait(repMs(s.en))]}));return u}
 function uStory(L,r,eve){if(!L.st.length)return[];const sp=eve?fastR(r):r;
  const u=[intro("짧은 이야기",eve?"아침에 들은 이야기를 조금 더 빠르게 듣습니다. 끝나면 질문에 답하세요.":"짧은 이야기를 영어로만 들어봅니다. 끝나면 질문에 소리 내어 답하세요."),{label:"짧은 이야기",steps:L.st.flatMap(l=>[say(l.en,"en",sp),wait(450)])}];
  L.q.forEach(q=>u.push({label:"이야기 질문",steps:[say(q.q,"en",r,"A"),hear(q.a,repMs(q.a)+1800),say(q.a,"en",r),wait(repMs(q.a))]}));
@@ -450,7 +501,7 @@ function uStory(L,r,eve){if(!L.st.length)return[];const sp=eve?fastR(r):r;
 function uOpen(L,r){if(!L.o.length)return[];const u=[intro("내 대답 만들기","정답 없는 질문입니다. 질문을 듣고 7초 동안 내 이야기로 대답한 뒤, 예시 답을 따라 하세요.")];
  L.o.forEach(o=>u.push({label:"내 대답 만들기",steps:[say(o.q,"en",r,"A"),wait(7000),say(o.a,"en",r),wait(repMs(o.a)),say(o.a,"en",r),wait(repMs(o.a))]}));return u}
 function uListen(L,r){return[intro("회화 듣기","오늘의 회화를 들어봅니다."),...L.d.map(l=>({label:"회화 듣기",steps:[say(l.en,"en",r,l.who),wait(350),koS(l.ko),wait(350)]}))]}
-function uRole(L,r,me){return[intro("역할극",me==="B"?"이제 비 역할입니다. 한국말을 듣고 내 대사를 먼저 말해보세요.":"이번에는 에이 역할을 맡아 먼저 말을 걸어보세요."),...L.d.map(l=>l.who===me?{label:"내 차례",steps:[koS(l.ko),hear(l.en,repMs(l.en)+800),say(l.en,"en",r,l.who),wait(repMs(l.en))]}:{label:"상대 말 듣기",steps:[say(l.en,"en",r,l.who),wait(500)]})]}
+function uRole(L,r,me){return[intro("역할극",me==="B"?"이제 비 역할입니다. 한국말을 듣고 내 대사를 먼저 말해보세요.":"이번에는 에이 역할을 맡아 먼저 말을 걸어보세요."),...L.d.map(l=>l.who===me?{label:"내 차례",steps:[cue(l.ko),hear(l.en,repMs(l.en)+800),say(l.en,"en",r,l.who),wait(repMs(l.en))]}:{label:"상대 말 듣기",steps:[say(l.en,"en",r,l.who),wait(500)]})]}
 function uNative(L){const u=[intro("원어민 속도 도전","원어민 속도 도전입니다. 한국말 없이 두 번 듣습니다.")];for(let k=0;k<2;k++)u.push({label:"원어민 속도 도전",steps:L.d.flatMap(l=>[say(native(l.en),"en",1,l.who),wait(250)]).concat(wait(1200))});u.push({label:"원어민 속도 도전",steps:[koS("두 번째에 더 많이 들렸다면 귀가 자라고 있는 겁니다.")]});return u}
 function reviewPool(){const out=[];for(let d=0;d<S.day;d++){const L=lessonAt(d);if(L)L.s.forEach(s=>out.push({...s,day:d}))}return out}
 function pickReview(n,extra){const now=Date.now(),pool=reviewPool(),I=[1,3,7,21,60];
@@ -462,8 +513,8 @@ function uWeek(L,r){const u=[];for(let d=Math.max(0,L.day-4);d<L.day;d++){const 
 function myLines(from,to){const out=[];for(let d=from;d<=to;d++){const D=lessonAt(d);if(D&&D.my)out.push({...D.my,day:d})}return out}
 function uMy(L,r,fresh){const lines=myLines(weekStart(L.day),L.day);if(!lines.length)return[];const u=[intro("나의 이야기",fresh?"나의 이야기 시간입니다. 이번 주에 쌓은 내 대사에 오늘 문장이 덧붙습니다.":"이번 주에 쌓은 나의 이야기를 처음부터 말해봅니다.")];
  if(fresh){const t=lines.filter(x=>x.day===L.day);t.forEach(x=>u.push({label:"나의 이야기",steps:[say(x.en,"en",.75),wait(400),koS(x.ko),wait(400),say(x.en,"en",r),wait(repNew(x.en)),say(x.en,"en",r),wait(repNew(x.en))]}))}
- lines.forEach(x=>u.push({label:"나의 이야기",steps:[koS(x.ko),wait(repNew(x.en)),say(x.en,"en",r),wait(repMs(x.en))]}));
- const all=lines.map(x=>x.en).join(" ");u.push({label:"나의 이야기",steps:[koS("이어서 한 번에 들어봅니다."),say(all,"en",r),wait(800),koS("이제 처음부터 혼자 말해보세요."),wait(lines.reduce((a,x)=>a+repNew(x.en),0)),say(all,"en",r),wait(500)]});return u}
+ lines.forEach(x=>u.push({label:"나의 이야기",steps:[cue(x.ko),wait(repNew(x.en)),say(x.en,"en",r),wait(repMs(x.en))]}));
+ const all=lines.map(x=>say(x.en,"en",r));u.push({label:"나의 이야기",steps:[koS("이어서 한 번에 들어봅니다."),...all,wait(800),cue("이제 처음부터 혼자 말해보세요."),wait(lines.reduce((a,x)=>a+repNew(x.en),0)),...all,wait(500)]});return u}
 function uLastWeekMy(L,r){if(L.dayNo!==1||L.week<2)return[];const lines=myLines(L.day-5,L.day-1);if(!lines.length)return[];return[intro("지난주 나의 이야기","지난주에 완성한 나의 이야기로 한 주를 시작합니다. 들으면서 함께 말해보세요."),{label:"지난주 나의 이야기",steps:lines.flatMap(x=>[say(x.en,"en",r),wait(repMs(x.en))])}]}
 function reviewUnits(L,r){const round=P.round=(P.round||0)+1,k=round%5;let u=[];
  if(L){u=k===1?uWeek(L,r):k===2?uShadow(L,r):k===3?uMy(L,r,false):k===4?uRole(L,r,"A"):uStory(L,r,true);if(!u.length)u=uShadow(L,r)}
@@ -484,6 +535,27 @@ function buildSession(kind,L,r){const u=[];
  return u}
 const closing=kind=>({label:"수업 마무리",steps:[koS(kind==="m"?"출근 수업을 마칩니다. 오늘 문장 중 하나를 혼잣말로 써보세요. 휴대폰 화면에서 오늘 문장을 볼 수 있습니다.":"퇴근 수업을 마칩니다. 집에서 5분 발음 체크를 해보세요. 오늘도 수고하셨습니다.")]});
 
+/* 운전 화면 문장: 지금 나오는 영어와 뜻. 따라 말하는 시간에도 그대로 남긴다 */
+const koOf=t=>KO[t]||KO[Object.keys(KO).find(k=>native(k)===t)]||"";
+function lineStep(U,st){if(P.lineU!==U){P.lineU=U;P.en="";P.ko="";P.who="";P.turn="";P.mine=false}
+ if(st.t==="say"){P.mine=false;
+  if(st.lang==="en"){P.en=st.text;P.ko=koOf(U.main||st.text);P.who=st.who||"";P.turn="들어 보세요"}
+  else if(st.cue){P.en="";P.ko=st.text;P.turn="들어 보세요"}
+  else P.turn="설명을 들어 보세요"}
+ else if((st.t==="hear"||st.ms>=1200)&&(P.en||P.ko)){P.mine=true;
+  P.turn=!P.en?"영어로 말하세요":P.who==="A"&&/질문|대답/.test(U.label)?"대답하세요":"따라 말하세요"}
+ drawLine(U)}
+/* 긴 문장은 칸에 들어갈 때까지 글자를 줄인다 */
+function drawLine(U){const en=$("#d-en"),main=U&&U.main,at=main&&P.en?main.indexOf(P.en):-1;
+ en.innerHTML=!P.en?"":at<0||main===P.en?esc(P.en):esc(main.slice(0,at))+"<mark>"+esc(P.en)+"</mark>"+esc(main.slice(at+P.en.length));
+ $("#d-ko").textContent=P.ko||"";$("#d-ko").classList.toggle("cue",!P.en&&!!P.ko);
+ const tn=$("#d-turn");tn.textContent=P.turn||"";tn.classList.toggle("mine",!!P.mine);fitLine()}
+function fitLine(){const box=$("#d-line"),en=$("#d-en");en.style.fontSize="";$("#d-ko").style.fontSize="";if(!box.clientHeight)return;
+ let f=parseFloat(getComputedStyle(en).fontSize),k=parseFloat(getComputedStyle($("#d-ko")).fontSize);
+ while(box.scrollHeight>box.clientHeight+1&&(f>22||k>15)){if(f>22){f-=2;en.style.fontSize=f+"px"}if(k>15){k-=1;$("#d-ko").style.fontSize=k+"px"}}}
+function clearLine(){P.lineU=null;P.en="";P.ko="";P.turn="";P.mine=false;drawLine(null)}
+addEventListener("resize",()=>{if(P.on)fitLine()});
+
 /* 플레이어 */
 const P={on:false,paused:false,units:[],u:0,s:0,elapsed:0,last:0,tok:0,kind:"m",L:null,closing:false,logged:0,round:0,timer:0,lock:null,planned:0,marked:false,scores:[],miss:0};
 function tick(){const n=Date.now();if(!P.paused&&P.on)P.elapsed+=n-P.last;P.last=n}
@@ -500,10 +572,10 @@ async function run(tok){while(P.on&&tok===P.tok&&!P.paused){tick();
  if(!P.marked&&P.u>=P.planned)markDone();
  if(P.u>=P.units.length){if(P.closing)return finish(true);P.units.push(...reviewUnits(P.L,S.rate));continue}
  const U=P.units[P.u];paint();if(P.s>=U.steps.length){(U.ids||[]).forEach(id=>S.seen[id]=Date.now());P.u++;P.s=0;continue}
- const st=U.steps[P.s];if(st.t==="say")await speak(st.text,st.lang,st.rate,st.who);else if(st.t==="hear"&&carMicOn())await carHear(st.en,st.ms,tok);else await new Promise(r=>setTimeout(r,st.ms));
+ const st=U.steps[P.s];lineStep(U,st);if(st.t==="say")await speak(st.text,st.lang,st.rate,st.who);else if(st.t==="hear"&&carMicOn())await carHear(st.en,st.ms,tok);else await new Promise(r=>setTimeout(r,st.ms));
  if(tok!==P.tok)return;P.s++}}
-function restart(){P.tok++;if(synth)synth.cancel();micStop();const t=P.tok;setTimeout(()=>run(t),120)}
-function togglePause(){tick();P.paused=!P.paused;$("#d-pause").textContent=P.paused?"계속":"일시정지";if(P.paused){P.tok++;if(synth)synth.cancel();micStop()}else{P.last=Date.now();restart()}paint()}
+function restart(){clearLine();P.tok++;if(synth)synth.cancel();micStop();const t=P.tok;setTimeout(()=>run(t),120)}
+function togglePause(){tick();P.paused=!P.paused;$("#d-pause").textContent=P.paused?"계속":"일시정지";if(P.paused){P.tok++;if(synth)synth.cancel();micStop()}else{P.last=Date.now();P.tok++;const t=P.tok;setTimeout(()=>run(t),120)}paint()}
 function next(){if(P.paused)togglePause();P.u=Math.min(P.u+1,P.units.length);P.s=0;restart()}
 function prev(){if(P.paused)togglePause();if(P.s<2&&P.u>0)P.u--;P.s=0;restart()}
 function logTime(){tick();const m=Math.floor((P.elapsed-P.logged)/60000);if(m>0){P.logged+=m*60000;const k=today();S.log[k]=(S.log[k]||0)+m;save()}}
@@ -511,7 +583,7 @@ function start(kind){if(!synth){showToast("이 브라우저는 음성을 지원�
  pickVoices();synth.cancel();audioOn();const L=lessonAt(S.day);Object.assign(P,{on:true,paused:false,kind,L,units:buildSession(kind,L,S.rate),u:0,s:0,elapsed:0,last:Date.now(),closing:false,logged:0,round:0,marked:false,scores:[],miss:0,tok:P.tok+1});
  if(carMicOn()&&L)P.units.unshift({label:"자동 채점 켜짐",steps:[koS("오늘은 자동 채점이 켜져 있습니다. 삐 소리가 나면 영어로 말하세요. 버튼은 누르지 않아도 됩니다."),wait(300)]});
  P.planned=P.units.length;
- $("#d-kind").textContent=(kind==="m"?"출근":"퇴근")+" 수업"+(L?" · "+L.week+"주 "+L.dayNo+"일":" · 복습");$("#d-pause").textContent="일시정지";$("#drive").hidden=false;lockOn();wheelOn();clearInterval(P.timer);P.timer=setInterval(()=>{tick();paint();if(Math.floor(P.elapsed/60000)-P.logged/60000>=5)logTime();if(!P.marked&&P.elapsed>=15*60000)markDone()},1000);paint();run(P.tok)}
+ $("#d-kind").textContent=(kind==="m"?"출근":"퇴근")+" 수업"+(L?" · "+L.week+"주 "+L.dayNo+"일":" · 복습");$("#d-pause").textContent="일시정지";$("#drive").hidden=false;clearLine();lockOn();wheelOn();clearInterval(P.timer);P.timer=setInterval(()=>{tick();paint();if(Math.floor(P.elapsed/60000)-P.logged/60000>=5)logTime();if(!P.marked&&P.elapsed>=15*60000)markDone()},1000);paint();run(P.tok)}
 /* 수업 완료 처리: 오늘 내용을 다 들었거나 15분이 지나면 바로 저장. 앱을 그냥 닫아도 진도가 넘어간다. */
 function markDone(){if(P.marked||!P.L)return;P.marked=true;S.lastDay=P.L.day;S.lastAt=Date.now();
  if(P.kind==="m"){if(S.day===P.L.day)S.morningDay=S.day}else if(S.day===P.L.day){S.day++;S.morningDay=-1}
@@ -542,7 +614,7 @@ function renderHome(){const L=lessonAt(S.day),w=weekOf(S.day),ph=phaseOf(w),am=n
  <div class="go"><button id="go-m" class="${nextKind==="m"?"next":""}">출근 수업<small>${mDone?"완료 · 다시 듣기":"30분 자동 진행"}</small></button><button id="go-e" class="${nextKind==="e"?"next":""}">퇴근 수업<small>30분 자동 진행</small></button></div>
  <div class="meter" role="img" aria-label="전체 과정 ${pct}퍼센트 완료"><div class="track"><span class="fill" style="width:${pct}%"></span></div><b>${pct}<small>%</small></b></div></div>
  ${voiceWarn}${nativeCarMic()&&!S.carMic?`<div class="notice"><b>운전 중 자동 채점을 켜 보세요</b>삐 소리가 나면 영어로 말하면 됩니다. 버튼을 누르지 않아도 휴대폰이 듣고 Good!으로 알려 줍니다.<div class="row"><button class="btn primary" id="carmic-go">자동 채점 켜기</button></div></div>`:""}${S.name?"":`<div class="notice"><b>내 이름을 넣어 주세요</b>수업 속 자기소개 문장에 들어갈 이름입니다. 지금은 Min(민)으로 나옵니다.<div class="row"><button class="btn" id="name-go">이름 넣기</button></div></div>`}${recent}${gen}
- <div class="notice"><b>출발 전에 시작 버튼을 누르세요</b>주행 중에는 화면을 조작하지 마세요. 시작하면 화면이 켜진 채로 30분 동안 자동으로 진행됩니다.<div class="row"><button class="btn" id="test">소리 점검</button><button class="btn" id="setup">${setupOpen?"설정 닫기":"설정과 목소리"}</button></div>
+ <div class="notice"><b>출발 전에 시작 버튼을 누르세요</b>시작하면 화면이 켜진 채로 30분 동안 자동으로 진행되고, 지금 나오는 문장이 화면에 뜹니다. 주행 중에는 조작하지 말고, 화면은 신호 대기 때만 보세요.<div class="row"><button class="btn" id="test">소리 점검</button><button class="btn" id="setup">${setupOpen?"설정 닫기":"설정과 목소리"}</button></div>
  <div id="setup-box" ${setupOpen?"":"hidden"} style="gap:12px;display:grid">
  ${voiceSel("v-en",voices.enList,voices.en,"영어 목소리 (설명, 내 대사)")}${voiceSel("v-en2",voices.enList,voices.en2,"영어 목소리 (대화 상대)")}${voiceSel("v-ko",voices.koList,voices.ko,"한국어 목소리")}
  <p class="small">이름에 Natural, Neural, network가 들어간 목소리가 더 사람 같습니다. 목록이 짧거나 바꿔도 소리가 그대로라면 휴대폰 설정에서 바꿔야 합니다. 설정 검색창에 TTS를 검색해 기본 엔진을 Google로 바꾸고, 음성 데이터 설치에서 영어(미국)와 한국어의 고품질 음성을 받아주세요.</p>
@@ -690,13 +762,13 @@ loadLocal();renderAll();initCaps();
 (function(){
  if(typeof VOCAB==="undefined"||!VOCAB)return;
  const vocabOf=day=>{const w=Math.floor(day/5)+1,a=VOCAB[w]&&VOCAB[w][day%5];if(!Array.isArray(a))return[];
-  return a.map(x=>{const p=per(String(x)).split("|").map(t=>t.trim());return{en:p[0]||"",ko:p[1]||"",ex:p[2]||"",exKo:p[3]||""}}).filter(v=>v.en&&v.ko)};
+  return a.map(x=>{const p=per(String(x)).split("|").map(t=>t.trim());if(p[0])KO[p[0]]=p[1]||"";if(p[2])KO[p[2]]=p[3]||"";return{en:p[0]||"",ko:p[1]||"",ex:p[2]||"",exKo:p[3]||""}}).filter(v=>v.en&&v.ko)};
  window.vocabOf=vocabOf;
 
  const uVocab=(V,r)=>[intro("오늘의 단어","오늘 문장에 나오는 단어 "+V.length+"개를 먼저 익힙니다. 단어를 듣고 두 번 따라 하세요."),
   ...V.map(v=>({label:"오늘의 단어",steps:[say(v.en,"en",.72),wait(repNew(v.en)),koS(v.ko),wait(250),say(v.en,"en",r),wait(repNew(v.en)),...(v.ex?[say(v.ex,"en",r),wait(repMs(v.ex))]:[])]}))];
  const uVocabRecall=(V,r)=>[intro("단어 떠올리기","한국말 뜻을 듣고 영어 단어를 먼저 말해보세요."),
-  ...shuffle(V).map(v=>({label:"단어 떠올리기",steps:[koS(v.ko),wait(2200),say(v.en,"en",r),wait(repNew(v.en)),...(v.ex?[say(v.ex,"en",r),wait(repMs(v.ex))]:[])]}))];
+  ...shuffle(V).map(v=>({label:"단어 떠올리기",steps:[cue(v.ko),wait(2200),say(v.en,"en",r),wait(repNew(v.en)),...(v.ex?[say(v.ex,"en",r),wait(repMs(v.ex))]:[])]}))];
 
  const baseBuild=buildSession;
  buildSession=function(kind,L,r){const u=baseBuild(kind,L,r);if(!L)return u;const V=vocabOf(L.day);if(!V.length)return u;
